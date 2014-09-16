@@ -1,3 +1,5 @@
+setwd("~/Courses/get cleaning data/GetData_assign1") #office, borrar
+
 cat("loading required packages")
 library(dplyr)
 library(tidyr)
@@ -27,11 +29,20 @@ subTest <- "./UCI HAR Dataset/test/subject_test.txt"
 yTrain <- "./UCI HAR Dataset/train/y_train.txt"
 xTrain <- "./UCI HAR Dataset/train/X_train.txt"
 subTrain <- "./UCI HAR Dataset/train/subject_train.txt"
+set_id <- c("test", "train")
 
-dataTrain <- rData(xTrain, yTrain, SubTrain)
+# following lines creathe the set and respective id's 
+# see the function definition for further details        
+dataTest <- rData(xTest, yTest, subTest)        
+dataTrain <- rData(xTrain, yTrain, subTrain)
+set_id <- "test"
+dataTest <- cbind(set_id, dataTest)
+set_id <- "train"
+dataTrain <- cbind(set_id, dataTrain)
+dataTest <- data.table(dataTest, keep.rownames = F, key = names(dataTest[1:3]))
+dataTrain <- data.table(dataTrain, keep.rownames = F, key = names(dataTrain[1:3])) # turns df into dt, for easier handling
+data <- rbind_list(dataTest, dataTrain) #bind them all
 
 
 
-
-#View(set_test)
 
