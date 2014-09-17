@@ -41,7 +41,7 @@ set_id <- "train"
 dataTrain <- cbind(set_id, dataTrain)
 dataTest <- data.table(dataTest, keep.rownames = F, key = names(dataTest[1:3]))
 dataTrain <- data.table(dataTrain, keep.rownames = F, key = names(dataTrain[1:3])) # turns df into dt, for easier handling
-data <- rbind_list(dataTest, dataTrain) #bind them all
+data <- as.data.table(rbind_list(dataTest, dataTrain)) #bind them all
 
 
 
