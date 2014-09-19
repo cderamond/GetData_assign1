@@ -1,10 +1,9 @@
-setwd("~/Courses/get cleaning data/GetData_assign1") #office, borrar
 
 cat("loading required packages")
 library(dplyr)
-library(tidyr)
-library(data.table) #loading required packages
+library(tidyr) #loading required packages
 
+if(!file.exists("./UCI HAR Dataset")){stop("data set directory does not exist, please check instructions") }
 
 rData <- function(x, y, sub) {
         # this function will take the data set, assign the names and the right columns
@@ -23,13 +22,15 @@ rData <- function(x, y, sub) {
                         x <- cbind(sub, x)
         x
 }
+## variable definition, the script is working under supposition that working directory contains data set and script
+# remember to read readme.md
+
 yTest <- "./UCI HAR Dataset/test/y_test.txt"
 xTest <- "./UCI HAR Dataset/test/X_test.txt"
 subTest <- "./UCI HAR Dataset/test/subject_test.txt"
 yTrain <- "./UCI HAR Dataset/train/y_train.txt"
 xTrain <- "./UCI HAR Dataset/train/X_train.txt"
 subTrain <- "./UCI HAR Dataset/train/subject_train.txt"
-set_id <- c("test", "train")
 
 # following lines creathe the set and respective id's 
 # see the function definition for further details        
@@ -39,10 +40,18 @@ set_id <- "test"
 dataTest <- cbind(set_id, dataTest)
 set_id <- "train"
 dataTrain <- cbind(set_id, dataTrain)
-dataTest <- data.table(dataTest, keep.rownames = F, key = names(dataTest[1:3]))
-dataTrain <- data.table(dataTrain, keep.rownames = F, key = names(dataTrain[1:3])) # turns df into dt, for easier handling
-data <- as.data.table(rbind_list(dataTest, dataTrain)) #bind them all
+data <- rbind_list(dataTest, dataTrain) #bind them all
+rm(dataTest, dataTrain) #free memory
 
-
-
-
+actLab <- read.table("./UCI HAR Dataset/activity_labels.txt", col.names = c("activity_id", "activity_label"), quote="\"")
+data <- inner_join(actLab, data, by = "activity_id") # add activity label from txt
+summaryData <-
+        data %.% 
+        select( -set_id, -activity_id) %.% #drop unneeded data
+        group_by( "activity_label", "subject_id") %.% #grouping as required by point 5
+        summarise_each( funs(mean)) 
+write.table(summaryData, file = "./results.txt", row.names = F, col.names = T) 
+cat("results.txt was written with following data...")
+print(tbl_df(summaryData))
+        
+# so now we've completed functional requirements the data is merged, summarised and subseted
