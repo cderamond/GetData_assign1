@@ -1,7 +1,8 @@
-# getdata-007 assignment 1 - Readme
+# getdata-008 assignment 1 - Readme
 this git contains my script for assignment 1.
 note that by coursera honor code, you must make sure the code you submit is your own. Having said so:
-
+### Acknowledgement
+	I have not pulled new changes, as I prepared the assigment for previous period
 ## Preparation
 
 1. Make sure to set working directory on the root where run_analysis.R is located.
